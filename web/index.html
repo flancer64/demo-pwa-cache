@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Caching functionality in a Progressive Web Application (PWA).">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>PWA Caching</title>
+    <style>
+        /* to prevent blinking */
+        BODY {
+            background: linear-gradient(180deg, saddlebrown, sandybrown);
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+            width: 100dvw;
+        }
+    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const urlSw = '/sw.js';
+                if ('serviceWorker' in navigator) { // if browser supports service workers
+                    // ... then add event handler to run script after window will be loaded
+                    // (https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event)
+                    const worker = navigator.serviceWorker;
+                    if (worker.controller === null) {
+                        // ... then load 'sw.js' script and register service worker in navigator
+                        try {
+                            console.log(`Try to register new service worker (load '${urlSw}').`);
+                            const reg = await worker.register(urlSw, {type: 'module'});
+                            if (reg.active) {
+                                console.log(`SW is registered and is active. Start app bootstrap.`);
+                            } else {
+                                console.log(`SW is registered but is not activated yet.`);
+                                // wait for `controllerchange` (see `clients.claim()` in SW code on `activate` event)
+                                worker.addEventListener('controllerchange', async () => {
+                                    console.log(`SW just installed (page's first load). Start app bootstrap.`);
+                                });
+                            }
+                        } catch (e) {
+                            console.log(`SW registration is failed: ${e}\n${e.stack}`);
+                        }
+                    } else {
+                        // SW already installed before (repeated loading of the page).
+                        console.log('SW is already installed for this app.');
+                    }
+                } else {
+                    console.log(`Cannot start PWA. This browser does not have a Service Workers support.`);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="display">
+    <h1>Caching in Web Apps </h1>
+    <ul>
+        <li><a href="./no_cache/">No Cache</a></li>
+        <li><a href="./cached/">Cached Data</a></li>
+        <li><a href="./sw/">Service Worker</a></li>
+    </ul>
+</div>
+</body>
+</html>

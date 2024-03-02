@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>${TITLE}</title>
+    <style>
+        /* to prevent blinking */
+        BODY {
+            background: linear-gradient(180deg, saddlebrown, sandybrown);
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+            width: 100dvw;
+        }
+    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <script>
+        // FUNCS
+        function clearCache() {
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(cacheName => caches.delete(cacheName));
+                });
+            }
+        }
+
+        // MAIN
+        document.addEventListener('DOMContentLoaded', () => {
+            // enable "Clear Cache" button for /sw/
+            if (location.pathname === '/sw/') {
+                const elBtn = document.getElementById('btnCache');
+                elBtn.style.display = 'inline-block';
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="display">
+    <h1>${TITLE}</h1>
+    <div>
+        <span>The server time (UTC):</span>
+        <span style="font-weight: bold">${TIME}</span>
+    </div>
+    <div style="text-align: center; padding-top: 10px;">
+        <button onclick="window.history.back()">Back</button>
+        <button id="btnCache" onclick="clearCache()" style="display:none;">Clear Cache</button>
+    </div>
+</div>
+</body>
+</html>

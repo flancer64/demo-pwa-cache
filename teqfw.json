@@ -1,0 +1,25 @@
+{
+  "@teqfw/core": {
+    "commands": []
+  },
+  "@teqfw/di": {
+    "autoload": {
+      "ns": "Demo_PwaCache",
+      "path": "./src"
+    },
+    "replaces": {},
+    "proxy": {}
+  },
+  "@teqfw/web": {
+    "handlers": {
+      "Demo_PwaCache_Back_Web_Handler_Cached": {
+        "before": ["TeqFw_Web_Back_App_Server_Handler_Static"],
+        "spaces": ["cached"]
+      },
+      "Demo_PwaCache_Back_Web_Handler_NoCache": {
+        "before": ["TeqFw_Web_Back_App_Server_Handler_Static"],
+        "spaces": ["no_cache", "sw"]
+      }
+    }
+  }
+}
